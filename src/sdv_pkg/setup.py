@@ -14,7 +14,13 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
     ],
-    install_requires=['setuptools'],
+    install_requires=['setuptools',
+                      'rclpy',
+                      'sensor_msgs',
+                      'cv_bridge',
+                      'vision_msgs',
+                      'message_filters',
+                      ],
     zip_safe=True,
     maintainer='santiagortegab',
     maintainer_email='santiagortegab@todo.todo',
@@ -28,7 +34,8 @@ setup(
     entry_points={
         'console_scripts': [
             'video_pub = sdv_pkg.video_pub:main',
-            'video_sub = sdv_pkg.video_sub:main',
+            'yolo_detection_node = sdv_pkg.yolo_detection:main',
+            'yolo_depth_node = sdv_pkg.yolo_depth:main',
         ],
     },
 )

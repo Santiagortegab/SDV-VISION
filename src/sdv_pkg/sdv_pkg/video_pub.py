@@ -19,6 +19,8 @@ class VideoPublisher(Node):
         ret, frame = self.cap.read()
         if ret:
             msg = self.bridge.cv2_to_imgmsg(frame, encoding='bgr8')
+            msg.header.stamp = self.get_clock().now().to_msg()
+            msg.header.frame_id = 'camera_link'
             self.publisher_.publish(msg)
             self.get_logger().info('Publicando frame de dashcam...')
         else:
