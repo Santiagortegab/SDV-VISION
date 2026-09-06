@@ -12,9 +12,17 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*')))
+        (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*launch.[pxy][yma]*'))),
+        (os.path.join('share', package_name, 'meshes'), glob(os.path.join('meshes', '*.[sd][ta][le]*')))
     ],
-    install_requires=['setuptools'],
+    install_requires=['setuptools',
+                      'rclpy',
+                      'sensor_msgs',
+                      'cv_bridge',
+                      'vision_msgs',
+                      'message_filters',
+                      'visualization_msgs',
+                      ],
     zip_safe=True,
     maintainer='santiagortegab',
     maintainer_email='santiagortegab@todo.todo',
@@ -28,7 +36,9 @@ setup(
     entry_points={
         'console_scripts': [
             'video_pub = sdv_pkg.video_pub:main',
-            'video_sub = sdv_pkg.video_sub:main',
+            'yolo_detection = sdv_pkg.yolo_detection:main',
+            'yolo_depth = sdv_pkg.yolo_depth:main',
+            'BEV = sdv_pkg.BEV:main'
         ],
     },
 )
