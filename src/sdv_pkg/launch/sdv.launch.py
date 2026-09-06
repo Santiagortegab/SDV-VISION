@@ -30,7 +30,11 @@ def generate_launch_description():
             name='yolo_depth',
             output='screen'
         ),
-
+        Node(
+            package='sdv_pkg',
+            executable='BEV',
+            name='bev_node'
+        ),
         Node(
             package='rviz2',
             executable='rviz2',

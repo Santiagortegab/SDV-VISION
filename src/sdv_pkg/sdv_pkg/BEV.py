@@ -26,7 +26,7 @@ class BevNode(Node):
 
         self.ts = message_filters.ApproximateTimeSynchronizer(
             [self.sub_det, self.sub_depth], queue_size=10, slop=0.05)
-        self.ts.registerCallBack(self.sync_callback)
+        self.ts.registerCallback(self.sync_callback)
 
     def sync_callback(self, det_msg, depth_msg):
         depth_matrix = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding='32FC1')
@@ -79,3 +79,13 @@ class BevNode(Node):
 
             marker_array.markers.append(marker)
         self.marker_pub.publish(marker_array)
+
+def main(args=None):
+    rclpy.init(args=args)
+    node = BevNode()
+    rclpy.spin(node)
+    node.destroy_node()
+    rclpy.shutdown()
+
+if __name__ == '__main__':
+    main()
