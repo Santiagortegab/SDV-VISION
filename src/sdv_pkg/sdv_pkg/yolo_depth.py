@@ -38,7 +38,7 @@ class DepthNode(Node):
         self.depth_raw.publish(raw_msg)
 
 
-        norm_depth =cv2.normalize(depth_matrix, None, O, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
+        norm_depth =cv2.normalize(depth_matrix, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
         colormap = cv2.applyColorMap(norm_depth, cv2.COLORMAP_INFERNO)
 
         map_msg = self.bridge.cv2_to_imgmsg(colormap, encoding='bgr8')
