@@ -20,6 +20,7 @@ setup(
                       'cv_bridge',
                       'vision_msgs',
                       'message_filters',
+                      'visualization_msgs',
                       ],
     zip_safe=True,
     maintainer='santiagortegab',
@@ -34,8 +35,9 @@ setup(
     entry_points={
         'console_scripts': [
             'video_pub = sdv_pkg.video_pub:main',
-            'yolo_detection_node = sdv_pkg.yolo_detection:main',
-            'yolo_depth_node = sdv_pkg.yolo_depth:main',
+            'yolo_detection = sdv_pkg.yolo_detection:main',
+            'yolo_depth = sdv_pkg.yolo_depth:main',
+            'BEV = sdv_pkg.BEV:main'
         ],
     },
 )
