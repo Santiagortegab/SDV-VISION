@@ -41,14 +41,14 @@ class YoloDetection(Node):
 
         self.bridge = CvBridge()
         self.get_logger().info("Cargando modelos YOLO...")
-        self.model_detect = YOLO("../../weights/yolo26n.pt")
-        self.model_depth = YOLO("../../weights/yolo26n-depth.pt")
+        self.model_detect = YOLO("/home/santiagortegab/SDV_VISION_ws/SDV-VISION/weights/yolo26n.onnx")
+        self.model_depth = YOLO("/home/santiagortegab/SDV_VISION_ws/SDV-VISION/weights/yolo26n-depth.onnx")
 
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
-        results_detect = self.model_detect(frame, classes=[0,1,2], imgsz=640)
-        results_depth = self.model_depth.predict(source=frame, imgsz=640, verbose=False)
+        results_detect = self.model_detect(frame, classes=[0,1,2], imgsz=(384, 640))
+        results_depth = self.model_depth.predict(source=frame, imgsz=(384, 640), verbose=False)
         
         det_array = Detection2DArray()
         det_array.header = msg.header
