@@ -21,19 +21,9 @@ def generate_launch_description():
         ),
 
         ExecuteProcess(
-            cmd=[venv_python, os.path.join(scripts_dir, 'yolo_detection.py')],
-            name='yolo_detection',
+            cmd=[venv_python, os.path.join(scripts_dir, 'yolo_node.py')],
+            name='yolo_node',
             output='screen'
-        ),
-        ExecuteProcess(
-            cmd=[venv_python, os.path.join(scripts_dir, 'yolo_depth.py')],
-            name='yolo_depth',
-            output='screen'
-        ),
-        Node(
-            package='sdv_pkg',
-            executable='BEV',
-            name='bev_node'
         ),
         Node(
             package='rviz2',

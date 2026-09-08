@@ -36,9 +36,7 @@ setup(
     entry_points={
         'console_scripts': [
             'video_pub = sdv_pkg.video_pub:main',
-            'yolo_detection = sdv_pkg.yolo_detection:main',
-            'yolo_depth = sdv_pkg.yolo_depth:main',
-            'BEV = sdv_pkg.BEV:main'
+            'yolo_node = sdv_pkg.yolo_node:main'
         ],
     },
 )
