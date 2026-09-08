@@ -1,11 +1,13 @@
 import rclpy
 from rclpy.node import Node
+from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import Image
 from vision_msgs.msg import Detection2DArray, Detection2D, ObjectHypothesisWithPose
 from cv_bridge import CvBridge
 from ultralytics import YOLO
 import cv2
 import numpy as np
+
 
 class YoloDetection(Node):
     def __init__(self):
@@ -14,7 +16,7 @@ class YoloDetection(Node):
             Image,
             'video_frames',
             self.listener_callback,
-            10
+            qos_profile_sensor_data
         )
         self.det_pub = self.create_publisher(
             Detection2DArray,
@@ -45,8 +47,8 @@ class YoloDetection(Node):
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
 
-        results_detect = self.model_detect(frame)
-        results_depth = self.model_depth.predict(source=frame, imgsz=768, verbose=False)
+        results_detect = self.model_detect(frame, classes=[0,1,2], imgsz=640)
+        results_depth = self.model_depth.predict(source=frame, imgsz=640, verbose=False)
         
         det_array = Detection2DArray()
         det_array.header = msg.header
