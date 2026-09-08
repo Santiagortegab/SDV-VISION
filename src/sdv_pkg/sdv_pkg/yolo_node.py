@@ -33,12 +33,6 @@ class YoloDetection(Node):
             'vision/depth_raw',
             10
         )
-        self.depth_map = self.create_publisher(
-            Image,
-            'vision/depth_map',
-            10
-        )
-
         self.bridge = CvBridge()
         self.get_logger().info("Cargando modelos YOLO...")
         self.model_detect = YOLO("/home/santiagortegab/SDV_VISION_ws/SDV-VISION/weights/yolo26n.onnx")
@@ -46,9 +40,10 @@ class YoloDetection(Node):
 
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+        frame =cv2.resize(frame, (640, 384))
 
         results_detect = self.model_detect(frame, classes=[0,1,2], imgsz=(384, 640))
-        results_depth = self.model_depth.predict(source=frame, imgsz=(384, 640), verbose=False)
+        results_depth = self.model_depth.predict(source=frame, imgsz=(384, 640))
         
         det_array = Detection2DArray()
         det_array.header = msg.header
@@ -82,12 +77,6 @@ class YoloDetection(Node):
         raw_msg.header = msg.header
         self.depth_raw.publish(raw_msg)
 
-        norm_depth =cv2.normalize(depth_matrix, None, 0, 255, cv2.NORM_MINMAX, dtype=cv2.CV_8U)
-        colormap = cv2.applyColorMap(norm_depth, cv2.COLORMAP_INFERNO)
-
-        map_msg = self.bridge.cv2_to_imgmsg(colormap, encoding='bgr8')
-        map_msg.header = msg.header
-        self.depth_map.publish(map_msg)
 def main(args=None):
     rclpy.init(args=args)
     node = YoloDetection()
