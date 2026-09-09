@@ -36,8 +36,8 @@ setup(
     entry_points={
         'console_scripts': [
             'video_pub = sdv_pkg.video_pub:main',
-            #'yolo_node = sdv_pkg.yolo_node:main',
-            #'BEV = sdv_pkg.BEV:main'
+            'yolo_node = sdv_pkg.yolo_node:main',
+            'BEV = sdv_pkg.BEV:main'
         ],
     },
 )
