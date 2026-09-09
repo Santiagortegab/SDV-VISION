@@ -16,21 +16,31 @@ class BevNode(Node):
             'vision/bev_markers', 
             10
             )
-        self.f_x = 800
-        self.f_y = 800
-        self.c_x = 640
-        self.c_y = 360
+        self.f_x = 400
+        self.f_y = 400
+        self.c_x = 320
+        self.c_y = 192
 
+        self.class_profiles ={
+            '0': ([1.0, 0.0, 0.0], [0.5, 0.5, 1.8]), #Persoa
+            '1': ([1.0, 0.5, 0.0], [1.8, 0.6, 1.2]), #Bici
+            '2': ([0.0, 0.5, 1.0], [4.5, 2.0, 1.5]), #Coche
+        }
+        
         self.sub_det = message_filters.Subscriber(self, Detection2DArray, 'vision/detections')
         self.sub_depth = message_filters.Subscriber(self, Image, 'vision/depth_raw')
 
         self.ts = message_filters.ApproximateTimeSynchronizer(
-            [self.sub_det, self.sub_depth], queue_size=10, slop=0.05)
+            [self.sub_det, self.sub_depth], queue_size=10, slop=0.1)
         self.ts.registerCallback(self.sync_callback)
 
     def sync_callback(self, det_msg, depth_msg):
         depth_matrix = self.bridge.imgmsg_to_cv2(depth_msg, desired_encoding='32FC1')
         marker_array =MarkerArray()
+
+        delete_all = Marker()
+        delete_all.action = Marker.DELETEALL
+        marker_array.markers.append(delete_all)
 
         for i, det in enumerate(det_msg.detections):
             cx = det.bbox.center.position.x
@@ -54,7 +64,7 @@ class BevNode(Node):
             marker.header.frame_id = 'camera_link'
             marker.header.stamp = det_msg.header.stamp
             marker.id = i
-            marker.type = Marker.MESH_RESOURCE
+            marker.type = Marker.CUBE
             marker.action = Marker.ADD
 
             marker.pose.position.x = Z
@@ -62,22 +72,43 @@ class BevNode(Node):
             marker.pose.position.z = -y_cam
 
             clase_id = det.results[0].hypothesis.class_id
-            if clase_id == '0':    # Persona
-                marker.mesh_resource = "package://sdv_pkg/meshes/person.stl"
-            elif clase_id == '1':  # Bicicleta
-                marker.mesh_resource = "package://sdv_pkg/meshes/bicicleta.stl"
-            elif clase_id == '2':  # Auto
-                marker.mesh_resource = "package://sdv_pkg/meshes/Car.dae"
-            else:
-                marker.type = Marker.CUBE
+            perfil = self.class_profiles.get(clase_id, ([0.5, 0.5, 0.5], [1.0, 1.0, 1.0]))
 
-            marker.scale.x = 1.0; marker.scale.y = 1.0; marker.scale.z = 1.0
-            marker.color.a = 1.0; marker.color.r = 0.0; marker.color.g = 1.0; marker.color.b = 0.0
-            marker.mesh_use_embedded_materials = True
-            marker.lifetime.sec = 0
-            marker.lifetime.nanosec = 100000000
+            marker.color.r, marker.color.g, marker.color.b = perfil[0]
+            marker.color.a = 1.0
+            
+            marker.scale.x = perfil[1][0]
+            marker.scale.y = perfil[1][1]
+            marker.scale.z = perfil[1][2]
+
+            marker.lifetime = rclpy.duration.Duration(seconds=0.2).to_msg()
 
             marker_array.markers.append(marker)
+
+        main_car = Marker()
+        main_car.header.frame_id = 'camera_link'
+        main_car.header.stamp = det_msg.header.stamp
+        main_car.ns = 'main_car'
+        main_car.id = 9999
+        main_car.type = Marker.CUBE
+        main_car.action = Marker.ADD
+
+        main_car.scale.x = 4.0
+        main_car.scale.y = 2.0
+        main_car.scale.z = 1.0
+
+        main_car.pose.position.x = -1.0
+        main_car.pose.position.y = 0.0
+        main_car.pose.position.z = -1.2
+
+        main_car.color.r = 0.0
+        main_car.color.g = 0.0
+        main_car.color.b = 0.0
+        main_car.color.a = 1.0
+
+        main_car.lifetime = rclpy.duration.Duration(seconds=0.2).to_msg()
+        marker_array.markers.append(main_car)
+        
         self.marker_pub.publish(marker_array)
 
 def main(args=None):

@@ -1,4 +1,6 @@
+import cv2
 import rclpy
+from rclpy.qos import qos_profile_sensor_data
 from rclpy.node import Node
 from sensor_msgs.msg import Image
 from vision_msgs.msg import Detection2DArray, Detection2D, ObjectHypothesisWithPose
@@ -12,7 +14,7 @@ class YoloDetection(Node):
             Image,
             'video_frames',
             self.listener_callback,
-            10
+            qos_profile_sensor_data
         )
         self.det_pub = self.create_publisher(
             Detection2DArray,
@@ -26,13 +28,14 @@ class YoloDetection(Node):
         )
 
         self.bridge = CvBridge()
-        self.get_logger().info("Cargando modelo YOLO...")
+        self.get_logger().info("Cargando modelo detección YOLO...")
         self.model = YOLO("../../weights/yolo26n.pt")
 
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+        frame = cv2.resize(frame, (640, 360))
 
-        results = self.model(frame)
+        results = self.model(frame, classes=[0,1,2], imgsz=(384,640))
 
         det_array = Detection2DArray()
         det_array.header = msg.header
