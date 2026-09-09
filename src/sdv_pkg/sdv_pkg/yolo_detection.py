@@ -35,7 +35,7 @@ class YoloDetection(Node):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
         frame = cv2.resize(frame, (640, 384))
 
-        results = self.model(frame, classes=[0,1,2], imgsz=(384,640))
+        results = self.model(frame, classes=[0,1,2], imgsz=(384,640), device=0)
 
         det_array = Detection2DArray()
         det_array.header = msg.header

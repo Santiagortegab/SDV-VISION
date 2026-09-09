@@ -28,7 +28,7 @@ class DepthNode(Node):
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
         frame = cv2.resize(frame, (640, 384))
-        results = self.model.predict(source=frame, imgsz=(384, 640))
+        results = self.model.predict(source=frame, imgsz=(384, 640), device=0)
         depth_matrix = results[0].depth.data.cpu().numpy().squeeze()
         depth_matrix = depth_matrix.astype(np.float32)
 
