@@ -33,7 +33,7 @@ class YoloDetection(Node):
 
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
-        frame = cv2.resize(frame, (640, 360))
+        frame = cv2.resize(frame, (640, 384))
 
         results = self.model(frame, classes=[0,1,2], imgsz=(384,640))
 
