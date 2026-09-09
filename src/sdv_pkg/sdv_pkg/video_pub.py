@@ -8,7 +8,7 @@ class VideoPublisher(Node):
     def __init__(self):
         super().__init__('video_publisher')
         self.publisher_ =self.create_publisher(Image, 'video_frames', 10)
-        timer_period = 0.1 
+        timer_period = 0.033 
         self.timer = self.create_timer(timer_period, self.timer_callback)
 
         video_path = '/home/santiagortegab/SDV_VISION_ws/SDV-VISION/dashcam_example4.mp4'
