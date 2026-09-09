@@ -83,7 +83,7 @@ class BevNode(Node):
             marker.scale.y = perfil[1][1]
             marker.scale.z = perfil[1][2]
 
-            marker.lifetime = rclpy.duration.Duration(seconds=3).to_msg()
+            marker.lifetime = rclpy.duration.Duration(seconds=5).to_msg()
 
             marker_array.markers.append(marker)
 
@@ -103,12 +103,12 @@ class BevNode(Node):
         main_car.pose.position.y = 0.0
         main_car.pose.position.z = -1.2
 
-        main_car.color.r = 0.3
-        main_car.color.g = 0.3
-        main_car.color.b = 0.3
-        main_car.color.a = 0.7
+        main_car.color.r = 0.0
+        main_car.color.g = 0.0
+        main_car.color.b = 0.0
+        main_car.color.a = 1.0
 
-        main_car.lifetime = rclpy.duration.Duration(seconds=3).to_msg()
+        main_car.lifetime = rclpy.duration.Duration(seconds=5).to_msg()
         marker_array.markers.append(main_car)
         
         self.marker_pub.publish(marker_array)
