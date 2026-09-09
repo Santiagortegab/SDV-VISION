@@ -29,7 +29,7 @@ class YoloDetection(Node):
 
         self.bridge = CvBridge()
         self.get_logger().info("Cargando modelo detección YOLO...")
-        self.model = YOLO("../../weights/yolo26n.pt")
+        self.model = YOLO("/home/santiagortegab/SDV_VISION_ws/SDV-VISION/weights/yolo26n.engine")
 
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')

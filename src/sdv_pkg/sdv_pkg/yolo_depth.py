@@ -23,7 +23,7 @@ class DepthNode(Node):
         )
         self.bridge = CvBridge()
         self.get_logger().info("Cargando modelo depth YOLO...")
-        self.model = YOLO("../../weights/yolo26n-depth.pt")
+        self.model = YOLO("/home/santiagortegab/SDV_VISION_ws/SDV-VISION/weights/yolo26n-depth.engine")
 
     def listener_callback(self, msg):
         frame = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
