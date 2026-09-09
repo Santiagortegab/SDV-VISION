@@ -19,7 +19,11 @@ def generate_launch_description():
             executable='video_pub',
             name='publicador_video'
         ),
-
+        Node(
+            package='sdv_pkg',
+            executable='BEV',
+            name='BEV_node'
+        ),
         ExecuteProcess(
             cmd=[venv_python, os.path.join(scripts_dir, 'yolo_node.py')],
             name='yolo_node',
